@@ -65,7 +65,6 @@ def main() -> None:
 
     # widgets
     title_label: ttk.Label = ttk.Label(root, text="Welcome to Yarusoto!")
-    top_separator: ttk.Separator = ttk.Separator(root, orient="horizontal")
     show_checked: ttk.Checkbutton = ttk.Checkbutton(
         root,
         text="Show completed to-dos",
@@ -74,7 +73,7 @@ def main() -> None:
         offvalue=False,
         command=lambda: update_todos(todos_frame)
     )
-    bottom_seperator: ttk.Separator = ttk.Separator(root, orient="horizontal")
+    seperator: ttk.Separator = ttk.Separator(root, orient="horizontal")
 
     # add_todos_frame widgets
     add_todo_text: ttk.Entry = ttk.Entry(add_todo_frame, width=20)
@@ -87,9 +86,8 @@ def main() -> None:
 
     # pack
     title_label.pack()
-    top_separator.pack()
     show_checked.pack()
-    bottom_seperator.pack()
+    seperator.pack(fill="x", padx=5)
 
     todos_frame.pack(anchor="w")
 
@@ -97,6 +95,7 @@ def main() -> None:
     add_todo_button.pack(side="left")
     add_todo_frame.pack(side="bottom")
 
+    # loop
     root.mainloop()
 
 
