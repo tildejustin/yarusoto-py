@@ -90,7 +90,7 @@ def main() -> None:
     seperator: ttk.Separator = ttk.Separator(root, orient="horizontal")
 
     # add_todos_frame widgets
-    add_todo_text: ttk.Entry = ttk.Entry(add_todo_frame, width=20)
+    add_todo_text: ttk.Entry = ttk.Entry(add_todo_frame, width=30)
     add_todo_button: ttk.Button = ttk.Button(
         add_todo_frame,
         text="Add to-do",
