@@ -7,11 +7,17 @@ from typing import List, Optional
 
 @dataclass
 class TodoItem:
-    task: str
+    name: str
     checked: Optional[tk.BooleanVar] = None
 
 
-def add_todo(add_todo_text: ttk.Entry, todos_frame: ttk.Frame, _=None) -> None:
+def add_todo(add_todo_text: ttk.Entry, todos_frame: ttk.Frame) -> None:
+    """
+    Add a new TodoItem to todo_list from the add_todo_text widget and re-renders the list.
+
+    :param add_todo_text: ttk.Entry widget that hold the text that should be the new TodoItem
+    :param todos_frame: The ttk.Frame that needs to be passed to update_todos to re-render the list
+    """
     global todo_list
 
     todo_to_add: str = add_todo_text.get().strip()
@@ -21,7 +27,12 @@ def add_todo(add_todo_text: ttk.Entry, todos_frame: ttk.Frame, _=None) -> None:
         update_todos(todos_frame)
 
 
-def update_todos(todos_frame: tk.Frame, _=None) -> None:
+def update_todos(todos_frame: ttk.Frame) -> None:
+    """
+    Updates the todos_frame with the TodoItems in todo_list. This allows for hidden checkboxes to not be rendered.
+
+    :param todos_frame: The ttk.Frame that should display the TodoItems
+    """
     for old_todo in todos_frame.winfo_children():
         old_todo.destroy()
     for todo in todo_list:
@@ -35,7 +46,7 @@ def update_todos(todos_frame: tk.Frame, _=None) -> None:
         else:
             ttk.Checkbutton(
                 todos_frame,
-                text=todo.task,
+                text=todo.name,
                 variable=todo.checked,
                 onvalue=True,
                 offvalue=False,
@@ -49,6 +60,9 @@ show_checked_var: Optional[tk.BooleanVar] = None
 
 
 def main() -> None:
+    """
+    Manages tk initialization and adds the non-dynamic widgets.
+    """
     global todo_list, show_checked_var
 
     ctypes.windll.shcore.SetProcessDpiAwareness(1)
