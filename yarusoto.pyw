@@ -94,7 +94,7 @@ def main() -> None:
     add_todo_text: ttk.Entry = ttk.Entry(add_todo_frame, width=30)
     add_todo_button: ttk.Button = ttk.Button(
         add_todo_frame,
-        text="Add to-do",
+        text="Add",
         command=lambda: add_todo(add_todo_text, todos_frame)
     )
     root.bind("<Return>", lambda _: add_todo(add_todo_text, todos_frame))
