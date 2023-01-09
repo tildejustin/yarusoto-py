@@ -24,10 +24,10 @@ def add_todo(add_todo_text: ttk.Entry, todos_frame: ttk.Frame) -> None:
     if len(todo_to_add) > 0:
         todo_list.append(TodoItem(todo_to_add))
         add_todo_text.delete(0, "end")
-        update_todos(todos_frame)
+        update_todos(todos_frame, show_checked_var.get())
 
 
-def update_todos(todos_frame: ttk.Frame) -> None:
+def update_todos(todos_frame: ttk.Frame, show_checked: bool) -> None:
     """
     Updates the todos_frame with the TodoItems in todo_list. This allows for hidden checkboxes to not be rendered.
 
@@ -41,7 +41,7 @@ def update_todos(todos_frame: ttk.Frame) -> None:
             # need to instantiate tk var here because if it is done outside the class or
             # before tk is initialized the script crashes
             todo.checked = tk.BooleanVar()
-        if not show_checked_var.get() and todo.checked.get():
+        if not show_checked and todo.checked.get():
             continue
         else:
             ttk.Checkbutton(
@@ -50,11 +50,11 @@ def update_todos(todos_frame: ttk.Frame) -> None:
                 variable=todo.checked,
                 onvalue=True,
                 offvalue=False,
-                command=lambda: update_todos(todos_frame)
+                command=lambda: update_todos(todos_frame, show_checked_var.get())
             ).pack(anchor="w")
 
 
-# init
+# global vars
 todo_list: List[TodoItem] = []
 show_checked_var: Optional[tk.BooleanVar] = None
 
@@ -85,9 +85,10 @@ def main() -> None:
         variable=show_checked_var,
         onvalue=True,
         offvalue=False,
-        command=lambda: update_todos(todos_frame)
+        command=lambda: update_todos(todos_frame, show_checked_var.get())
     )
     seperator: ttk.Separator = ttk.Separator(root, orient="horizontal")
+    todos_label = ttk.Label(text="To-dos:")
 
     # add_todos_frame widgets
     add_todo_text: ttk.Entry = ttk.Entry(add_todo_frame, width=30)
@@ -102,6 +103,7 @@ def main() -> None:
     title_label.pack()
     show_checked.pack()
     seperator.pack(fill="x", padx=5)
+    todos_label.pack(anchor="w")
 
     todos_frame.pack(anchor="w")
 
