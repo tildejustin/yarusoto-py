@@ -1,8 +1,8 @@
-import ctypes
 import tkinter as tk
 from dataclasses import dataclass
 from tkinter import ttk
 from typing import List, Optional
+from os import path
 
 
 @dataclass
@@ -29,9 +29,11 @@ def add_todo(add_todo_text: ttk.Entry, todos_frame: ttk.Frame) -> None:
 
 def update_todos(todos_frame: ttk.Frame, show_checked: bool) -> None:
     """
-    Updates the todos_frame with the TodoItems in todo_list. This allows for hidden checkboxes to not be rendered.
+    Updates the todos_frame with the TodoItems in todo_list. This allows for hidden checkboxes to be removed
+    immediately after they are checked .
 
     :param todos_frame: The ttk.Frame that should display the TodoItems
+    :param show_checked: Whether just the checked or all the todos should be rendered
     """
     for old_todo in todos_frame.winfo_children():
         old_todo.destroy()
@@ -65,10 +67,20 @@ def main() -> None:
     """
     global todo_list, show_checked_var
 
-    ctypes.windll.shcore.SetProcessDpiAwareness(1)
+    # ctypes.windll library is only found on Windows systems.
+    try:
+        from ctypes import windll
+    except AttributeError:
+        pass
+    else:
+        windll.shcore.SetProcessDpiAwareness(1)
+
     root = tk.Tk()
     root.title("Yarusoto")
     root.geometry("400x600")
+    dir_path = path.abspath(path.dirname(__file__))
+    icon = tk.PhotoImage(file=path.join(dir_path, "icon.png"))
+    root.iconphoto(False, icon)
 
     # vars
     show_checked_var = tk.BooleanVar()
@@ -115,5 +127,5 @@ def main() -> None:
     root.mainloop()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

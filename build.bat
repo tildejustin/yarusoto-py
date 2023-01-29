@@ -1,0 +1,1 @@
+pyinstaller -F --add-data "icon.png;." yarusoto.pyw
