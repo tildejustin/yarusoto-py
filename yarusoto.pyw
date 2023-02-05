@@ -1,12 +1,23 @@
+"""
+A simple tk todolist app
+"""
+
 import tkinter as tk
 from dataclasses import dataclass
+from os import path
 from tkinter import ttk
 from typing import List, Optional
-from os import path
 
 
 @dataclass
 class TodoItem:
+    """
+    Represents a single task.
+
+    Fields:\n
+    name: The name of the task\n
+    checked: The status of the task (if is it checked off)
+    """
     name: str
     checked: Optional[tk.BooleanVar] = None
 
@@ -18,8 +29,6 @@ def add_todo(add_todo_text: ttk.Entry, todos_frame: ttk.Frame) -> None:
     :param add_todo_text: ttk.Entry widget that hold the text that should be the new TodoItem
     :param todos_frame: The ttk.Frame that needs to be passed to update_todos to re-render the list
     """
-    global todo_list
-
     todo_to_add: str = add_todo_text.get().strip()
     if len(todo_to_add) > 0:
         todo_list.append(TodoItem(todo_to_add))
@@ -29,8 +38,8 @@ def add_todo(add_todo_text: ttk.Entry, todos_frame: ttk.Frame) -> None:
 
 def update_todos(todos_frame: ttk.Frame, show_checked: bool) -> None:
     """
-    Updates the todos_frame with the TodoItems in todo_list. This allows for hidden checkboxes to be removed
-    immediately after they are checked .
+    Updates the todos_frame with the TodoItems in todo_list. This allows for hidden checkboxes
+    to be removed immediately after they are checked .
 
     :param todos_frame: The ttk.Frame that should display the TodoItems
     :param show_checked: Whether just the checked or all the todos should be rendered
@@ -45,15 +54,14 @@ def update_todos(todos_frame: ttk.Frame, show_checked: bool) -> None:
             todo.checked = tk.BooleanVar()
         if not show_checked and todo.checked.get():
             continue
-        else:
-            ttk.Checkbutton(
-                todos_frame,
-                text=todo.name,
-                variable=todo.checked,
-                onvalue=True,
-                offvalue=False,
-                command=lambda: update_todos(todos_frame, show_checked_var.get())
-            ).pack(anchor="w")
+        ttk.Checkbutton(
+            todos_frame,
+            text=todo.name,
+            variable=todo.checked,
+            onvalue=True,
+            offvalue=False,
+            command=lambda: update_todos(todos_frame, show_checked_var.get())
+        ).pack(anchor="w")
 
 
 # global vars
@@ -65,7 +73,7 @@ def main() -> None:
     """
     Manages tk initialization and adds the non-dynamic widgets.
     """
-    global todo_list, show_checked_var
+    global show_checked_var
 
     # ctypes.windll library is only found on Windows systems.
     try:
