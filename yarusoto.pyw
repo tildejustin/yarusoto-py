@@ -78,7 +78,7 @@ def main() -> None:
     # ctypes.windll library is only found on Windows systems.
     try:
         from ctypes import windll
-    except AttributeError:
+    except ImportError:
         pass
     else:
         windll.shcore.SetProcessDpiAwareness(1)
