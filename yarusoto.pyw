@@ -77,6 +77,7 @@ def main() -> None:
 
     # ctypes.windll library is only found on Windows systems.
     try:
+        # noinspection PyUnresolvedReferences
         from ctypes import windll
     except ImportError:
         pass
