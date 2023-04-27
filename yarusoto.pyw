@@ -1,12 +1,12 @@
 """
-A simple tk todolist app
+A simple tkinter todolist app
 """
 
 import tkinter as tk
 from dataclasses import dataclass
 from os import path
 from tkinter import ttk
-from typing import List, Optional
+from typing import Optional
 
 
 @dataclass
@@ -14,9 +14,8 @@ class TodoItem:
     """
     Represents a single task.
 
-    Fields:\n
-    name: The name of the task\n
-    checked: The status of the task (if is it checked off)
+    :param name: The name of the task
+    :param checked: The status of the task (if is it checked off)
     """
     name: str
     checked: Optional[tk.BooleanVar] = None
@@ -30,22 +29,25 @@ def add_todo(add_todo_text: ttk.Entry, todos_frame: ttk.Frame) -> None:
     :param todos_frame: The ttk.Frame that needs to be passed to update_todos to re-render the list
     """
     todo_to_add: str = add_todo_text.get().strip()
+    add_todo_text.delete(0, "end")
     if len(todo_to_add) > 0:
         todo_list.append(TodoItem(todo_to_add))
-        add_todo_text.delete(0, "end")
         update_todos(todos_frame, show_checked_var.get())
 
 
 def update_todos(todos_frame: ttk.Frame, show_checked: bool) -> None:
     """
     Updates the todos_frame with the TodoItems in todo_list. This allows for hidden checkboxes
-    to be removed immediately after they are checked .
+    to be removed immediately after they are checked.
 
     :param todos_frame: The ttk.Frame that should display the TodoItems
     :param show_checked: Whether just the checked or all the todos should be rendered
     """
     for old_todo in todos_frame.winfo_children():
         old_todo.destroy()
+    # if only I could just do this
+    # map(lambda x: x.checked == tk.BooleanVar() if x.checked is None, todo_list)
+    # filter(lambda x: x.checked or show_checked, todo_list)
     for todo in todo_list:
         # check if [TodoItem].checked is None, so it can be initialized
         if todo.checked is None:
@@ -65,7 +67,7 @@ def update_todos(todos_frame: ttk.Frame, show_checked: bool) -> None:
 
 
 # global vars
-todo_list: List[TodoItem] = []
+todo_list: list[TodoItem] = []
 show_checked_var: Optional[tk.BooleanVar] = None
 
 
@@ -89,7 +91,7 @@ def main() -> None:
     root.geometry("400x600")
     dir_path = path.abspath(path.dirname(__file__))
     icon = tk.PhotoImage(file=path.join(dir_path, "icon.png"))
-    root.iconphoto(False, icon)
+    root.iconphoto(True, icon)
 
     # vars
     show_checked_var = tk.BooleanVar()
@@ -118,16 +120,14 @@ def main() -> None:
         text="Add",
         command=lambda: add_todo(add_todo_text, todos_frame)
     )
-    root.bind("<Return>", lambda _: add_todo(add_todo_text, todos_frame))
+    root.bind("<Return>", lambda *args: add_todo(add_todo_text, todos_frame))
 
     # pack
     title_label.pack()
     show_checked.pack()
     seperator.pack(fill="x", padx=5)
     todos_label.pack(anchor="w")
-
     todos_frame.pack(anchor="w")
-
     add_todo_text.pack(side="left")
     add_todo_button.pack(side="left")
     add_todo_frame.pack(side="bottom")
